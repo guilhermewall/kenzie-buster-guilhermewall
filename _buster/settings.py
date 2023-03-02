@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -100,6 +101,13 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+SIMPLE_JWT = {
+    # PADRAO 5MIN
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=5),
+    # PADRAO 24H
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=2)
+}
 
 
 # Internationalization
