@@ -4,9 +4,10 @@ from .serializers import MovieSerializer, MovieOrderSerializer
 from .models import Movie
 from users.permissions import IsAdminOrReadOnly
 from django.shortcuts import get_object_or_404
+from rest_framework.pagination import PageNumberPagination
 
 
-class MovieView(APIView):
+class MovieView(APIView, PageNumberPagination):
     # aqui onde ele vai localizar o usuario no banco pelo token, poderei ter acesso as informaçoes em breve
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminOrReadOnly]
@@ -22,9 +23,12 @@ class MovieView(APIView):
 
     def get(self, request: Request) -> Response:
         movies = Movie.objects.all()
-        serializer = MovieSerializer(movies, many=True)
 
-        return Response(serializer.data, status.HTTP_200_OK)
+        page = self.paginate_queryset(movies, request)
+        
+        serializer = MovieSerializer(page, many=True)
+
+        return self.get_paginated_response(serializer.data)
 
 
 class MovieDatailView(APIView):
